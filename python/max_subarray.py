@@ -11,7 +11,7 @@ def find_max_subarray_brute(arr, low, high):
             maxsum = sum
             start = low
             end = low + len - 1
-        for i in range(low + 1, (high - len + 1)):
+        for i in range(low + 1, (high - len + 2)):
             sum += arr[i + len - 1] - arr[i - 1]
             if sum > maxsum:
                 maxsum = sum
@@ -63,7 +63,21 @@ def find_max_subarray(arr, low, high):
     else:
         return ansmid
 
-arr = [3, -1, 4, -4, 10, 15, -8, 9, 10, 23, -10, -10, 50, -30, -20, 22, 10, -20, 15, 11, -9, -10, 2, -22]
+def max_subarray_linear(arr, low, high):
+    ans = [0, 0, arr[low]]
+    helper = [0, 0, arr[low]]
+    for i in range(low, high + 1):
+        if helper[2] >= 0:
+            helper[1] = i
+            helper[2] += arr[i]
+        else:
+            helper[0] = helper[1] = i
+            helper[2] = arr[i]
+        if helper[2] > ans[2]:
+            ans = helper[:]
+    return ans
+
+arr = [-3, 4, -8, -9, 10, 15, -15, 7, 10, 11, 12, -20, 10, 33, 12, -20, -40, 60, 50]
 print(arr)
 
 start = datetime.now()
@@ -77,3 +91,9 @@ ans = find_max_subarray(arr, 0, len(arr) - 1)
 delta = datetime.now() - start
 print(ans)
 print("recursive time taken:", delta.microseconds)
+
+start = datetime.now()
+ans = max_subarray_linear(arr, 0, len(arr) - 1)
+delta = datetime.now() - start
+print(ans)
+print("linear time taken:", delta.microseconds)
